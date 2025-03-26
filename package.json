@@ -12,6 +12,7 @@
     "axios": "^1.8.3",
     "chart.js": "^4.4.8",
     "next": "15.2.2",
+    "nodemailer": "^6.10.0",
     "papaparse": "^5.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -20,6 +21,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "@types/papaparse": "^5.3.15",
     "@types/react": "^19",
     "@types/react-dom": "^19",
