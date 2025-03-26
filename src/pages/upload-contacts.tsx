@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import Link from "next/link";
 interface Contact {
   website: string;
   first_name: string;
@@ -71,7 +71,7 @@ export default function UploadContacts() {
         <h2 className="text-xl font-bold mb-4">Navigation</h2>
         <ul>
           <li className="py-2 hover:bg-blue-800 cursor-pointer">
-            <a href="/">Dashboard</a>
+            <Link href="/">Dashboard</Link>
           </li>
           <li className="py-2 hover:bg-blue-800 cursor-pointer">
             Upload Contacts
