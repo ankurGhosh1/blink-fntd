@@ -10,6 +10,8 @@ interface Contact {
   role: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 export default function UploadContacts() {
   const [contactsCsvFile, setContactsCsvFile] = useState<File | null>(null);
   const [uploadMessage, setUploadMessage] = useState<string>("");
@@ -20,8 +22,11 @@ export default function UploadContacts() {
   const fetchContacts = async () => {
     setLoading(true);
     try {
+      // const response = await axios.get<{ contacts: Contact[] }>(
+      //   "http://localhost:5000/get-contacts"
+      // );
       const response = await axios.get<{ contacts: Contact[] }>(
-        "http://localhost:5000/get-contacts"
+        `${API_URL}/get-contacts`
       );
       setContacts(response.data.contacts);
     } catch (error) {
@@ -49,7 +54,7 @@ export default function UploadContacts() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/upload-contacts",
+        `${API_URL}/upload-contacts`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

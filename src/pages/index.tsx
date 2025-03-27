@@ -54,6 +54,8 @@ interface Site {
   score: number;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 export default function Dashboard() {
   const [step, setStep] = useState<number>(1); // Track the current step
   const [sites, setSites] = useState<Site[]>([]);
@@ -87,7 +89,7 @@ export default function Dashboard() {
 
     try {
       const response = await axios.post<{ results: Site[] }>(
-        "http://localhost:5000/analyze",
+        `${API_URL}/analyze`, // Use the API_URL environment variable
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -109,50 +111,6 @@ export default function Dashboard() {
     );
   };
 
-  // const handleFetchEmails = async () => {
-  //   if (selectedDomains.length === 0) {
-  //     alert("Please select at least one domain to fetch emails for.");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   const allContacts: Email[] = [];
-
-  //   try {
-  //     for (const domain of selectedDomains) {
-  //       const response = await axios.get<{ domain: string; emails: Email[] }>(
-  //         `http://localhost:5000/fetch-emails/${domain}`
-  //       );
-  //       setSites((prevSites) =>
-  //         prevSites.map((site) =>
-  //           site.domain === domain
-  //             ? { ...site, emails: response.data.emails }
-  //             : site
-  //         )
-  //       );
-  //       allContacts.push(...response.data.emails);
-  //     }
-  //     setSelectedContacts(allContacts);
-  //     setStep(3); // Move to Step 3
-  //   } catch (error) {
-  //     console.error("Error fetching emails:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleBack = () => {
-  //   if (step > 1) {
-  //     setStep(step - 1);
-  //     if (step === 2) {
-  //       setSelectedDomains([]); // Reset selected domains when going back to Step 1
-  //     }
-  //     if (step === 3) {
-  //       setSelectedContacts([]); // Reset selected contacts when going back to Step 2
-  //     }
-  //   }
-  // };
-
   const handleFetchEmails = async () => {
     if (selectedDomains.length === 0) {
       alert("Please select at least one domain to fetch emails for.");
@@ -171,7 +129,7 @@ export default function Dashboard() {
 
       for (const domain of domainsToFetch) {
         const response = await axios.get<{ domain: string; emails: Email[] }>(
-          `http://localhost:5000/fetch-emails/${domain}`
+          `${API_URL}/fetch-emails/${domain}`
         );
         setSites((prevSites) =>
           prevSites.map((site) =>
@@ -319,6 +277,8 @@ export default function Dashboard() {
           </form>
         )}
 
+        {/* Step 2 */}
+
         {step === 2 && (
           <div className="space-y-6">
             <h2 className="text-xl font-semibold">
@@ -334,14 +294,15 @@ export default function Dashboard() {
                     className={`border p-4 rounded shadow bg-white cursor-pointer hover:bg-gray-100 ${
                       selectedDomains.includes(site.domain) ? "bg-blue-100" : ""
                     }`}
-                    onClick={() => handleDomainToggle(site.domain)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent event propagation
+                      console.log("Toggling domain:", site.domain); // Debug log
+                      handleDomainToggle(site.domain);
+                    }}
                   >
-                    <a
-                      href={site.domain}
-                      className="text-xl font-semibold mb-2"
-                    >
+                    <h2 className="text-xl font-semibold mb-2">
                       {site.domain}
-                    </a>
+                    </h2>
                     <p>
                       <strong>DR:</strong> {site.dr}
                     </p>
@@ -367,12 +328,15 @@ export default function Dashboard() {
                   className="mt-4 bg-green-500 text-white p-2 rounded"
                   disabled={selectedDomains.length === 0}
                 >
-                  Fetch Emails for Selected Domains
+                  Fetch Emails for Selected Domains ({selectedDomains.length}{" "}
+                  selected)
                 </button>
               </>
             )}
           </div>
         )}
+
+        {/* Step 3 */}
 
         {step === 3 && (
           <div className="space-y-6">
@@ -492,7 +456,7 @@ export default function Dashboard() {
                 setLoading(true);
                 try {
                   const response = await axios.post(
-                    "http://localhost:5000/send-email",
+                    `${API_URL}/send-email`, // Use the API_URL environment variable
                     {
                       to: selectedContactsForEmail,
                       from: senderEmail,
