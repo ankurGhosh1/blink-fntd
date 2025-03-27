@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 // Define TypeScript interfaces for the data
+//  Fixed Deployment
 interface TrafficHistory {
   date: string;
   organic: number;
