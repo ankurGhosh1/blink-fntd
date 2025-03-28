@@ -10,7 +10,9 @@ interface Contact {
   role: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
+  "http://localhost:5000";
 
 export default function UploadContacts() {
   const [contactsCsvFile, setContactsCsvFile] = useState<File | null>(null);
