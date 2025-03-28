@@ -54,7 +54,9 @@ interface Site {
   score: number;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
+  "http://localhost:5000";
 
 export default function Dashboard() {
   const [step, setStep] = useState<number>(1); // Track the current step
